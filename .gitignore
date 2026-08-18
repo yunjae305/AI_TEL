@@ -1,0 +1,28 @@
+# 환경변수 — 절대 올리면 안 됨
+.env
+
+# SSH 키 — 절대 올리면 안 됨
+*.key
+*.pem
+
+# SQLite DB (수집 데이터)
+db/aifield.db
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# 가상환경
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Claude 설정
+.claude/
