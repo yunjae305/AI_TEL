@@ -38,6 +38,7 @@ class PasuinBot:
         by_level = " | ".join(
             f"L{lvl}:{cnt}" for lvl, cnt in sorted(db["by_level"].items())
         ) or "없음"
+        b = s["budget"]
         text = (
             "<b>AIField 상태</b>\n"
             "<pre>\n"
@@ -46,6 +47,7 @@ class PasuinBot:
             f"버퍼 대기   : {s['buffer_count']}건\n"
             f"레벨별      : {by_level}\n"
             f"다음 브리핑 : {s['next_briefing']} ({s['next_briefing_in']} 후)\n"
+            f"Gemini 예산 : {b['used']}/{b['limit']}회 (오늘)\n"
             "</pre>"
         )
         await update.message.reply_text(text, parse_mode="HTML")
