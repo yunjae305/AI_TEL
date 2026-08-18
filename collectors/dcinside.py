@@ -1,5 +1,5 @@
 """
-DC Inside 싱귀래리티 마이너 갤러리 수집기.
+DC Inside 싱귤래리티 마이너 갤러리 수집기.
 https://gall.dcinside.com/mgallery/board/lists/?id=thesingularity
 
 수집 기준:
