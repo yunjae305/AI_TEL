@@ -1,0 +1,20 @@
+[Unit]
+Description=AIField 파수인 텔레그램 봇
+After=network-online.target
+Wants=network-online.target
+# 크래시 루프 방지: 10분 안에 5번 실패하면 systemd가 재시작을 포기한다.
+# 무한 재시작을 막는 게 중요한 이유 — 재시작할 때마다 Gemini 하루 예산
+# 카운터가 0으로 리셋되므로, 루프에 빠지면 무료 티어를 통째로 태울 수 있다.
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/aifield
+ExecStart=/home/ubuntu/aifield/venv/bin/python -u main.py --live
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
