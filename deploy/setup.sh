@@ -36,7 +36,7 @@ if [ -f .env ]; then
 else
     cp .env.example .env
     chmod 600 .env
-    echo ".env를 .env.example에서 만들었다. 값을 채워야 봇이 뜼다:"
+    echo ".env를 .env.example에서 만들었다. 값을 채워야 봇이 뜬다:"
     echo "    nano $APP_DIR/.env"
 fi
 
