@@ -130,7 +130,7 @@ class AIFieldScheduler:
         label = f"L{item.alert_level} {'공식' if item.is_official else '루머'}"
         print(f"[scheduler] 즉시 알림 [{label}] {item.title[:50]}")
         try:
-            # 루머는 발송 전에 검증 서칭 — 결과를 본문에 함께 담아야 하므로 먼저 돌다
+            # 루머는 발송 전에 검증 서칭 — 결과를 본문에 함께 담아야 하므로 먼저 돈다
             if not item.is_official:
                 try:
                     item.verification_context = await asyncio.wait_for(
