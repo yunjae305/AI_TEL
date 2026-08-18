@@ -40,7 +40,7 @@ async def _search(query: str, task: str) -> str:
     """Gemini Google Search 툴로 검색하고 결과를 반환한다.
 
     llm.try_spend()로 하루 호출 예산을 메시지 생성과 공유한다.
-    예산이 없으면 검색을 건너넘는다 (검증 없이 발송되고, 그건 허용된 동작).
+    예산이 없으면 검색을 건너뛴다 (검증 없이 발송되고, 그건 허용된 동작).
     """
     if not config.GEMINI_API_KEY:
         return ""

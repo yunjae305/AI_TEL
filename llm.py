@@ -17,7 +17,7 @@ import config
 
 # gemini-2.5-flash는 신규 사용자에게 404 → 3.5-flash 사용
 _MODEL = "gemini-3.5-flash"
-_REQ_INTERVAL = 12.0   # 호출 간 최소 간격(초). 429가 짤으면 올린다
+_REQ_INTERVAL = 12.0   # 호출 간 최소 간격(초). 429가 잦으면 올린다
 _THINKING_BUDGET = 128  # thinking 토큰도 쿼터를 먹는다. 낮게 유지
 
 KST = timezone(timedelta(hours=9))
@@ -38,7 +38,7 @@ if config.GEMINI_API_KEY:
 # 하루 호출 예산 (RPD 가드)
 # ---------------------------------------------------------------------------
 # ponytail: 프로세스 메모리에만 두는 카운터라 재시작하면 0으로 돌아간다.
-# 재시작이 잦아 실제 쿼터를 넘기 시작하면 DB(news_store)에 옆긴다.
+# 재시작이 잦아 실제 쿼터를 넘기 시작하면 DB(news_store)에 옮긴다.
 
 _used = 0
 _used_day = None
