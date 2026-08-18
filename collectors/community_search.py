@@ -1,7 +1,7 @@
 """
 공식 속보 커뮤니티 반응 수집 + 루머 검증 검색.
 
-Gemini 2.5-flash의 내장 Google Search 툴을 사용한다.
+Gemini Flash의 내장 Google Search 툴을 사용한다.
 별도 API 키 불필요 — 기존 Gemini 키 그대로 사용.
 """
 
@@ -37,8 +37,16 @@ async def search_for_verification(item: NewsItem) -> str:
 
 
 async def _search(query: str, task: str) -> str:
-    """Gemini Google Search 툴로 검색하고 결과를 반환한다."""
+    """Gemini Google Search 툴로 검색하고 결과를 반환한다.
+
+    llm.try_spend()로 하루 호출 예산을 메시지 생성과 공유한다.
+    예산이 없으면 검색을 건너넘는다 (검증 없이 발송되고, 그건 허용된 동작).
+    """
     if not config.GEMINI_API_KEY:
+        return ""
+    from llm import try_spend
+    if not try_spend():
+        print("[community_search] 하루 호출 예산 소진 — 서칭 생략")
         return ""
     try:
         from google import genai
@@ -46,7 +54,7 @@ async def _search(query: str, task: str) -> str:
 
         client = genai.Client(api_key=config.GEMINI_API_KEY)
         response = await client.aio.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.5-flash",
             config=types.GenerateContentConfig(
                 tools=[types.Tool(google_search=types.GoogleSearch())],
                 max_output_tokens=400,
