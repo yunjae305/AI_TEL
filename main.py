@@ -79,7 +79,7 @@ async def run_test(bot: PasuinBot):
     await scheduler._post_immediate(RUMOR_NEWS)
     await asyncio.sleep(2)
 
-    # 시나리오 B: 공식 속보 (커뮤 반응 후속은 45분 뒤라 여긴선 안 뜼)
+    # 시나리오 B: 공식 속보 (커뮤 반응 후속은 45분 뒤라 여기선 안 뜼)
     print("[B] 공식 속보 포스팅")
     await scheduler._post_immediate(BREAKING_NEWS)
     await asyncio.sleep(2)
