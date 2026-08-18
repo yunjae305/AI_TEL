@@ -20,17 +20,20 @@ from collectors.community_search import fetch_reactions, search_for_verification
 from scorer import NewsItem
 from bot import PasuinBot
 from db.news_store import NewsStore
-from llm import generate
+from llm import generate, budget_status
 from prompts.pasuin_system import PASUIN_SYSTEM_PROMPT, briefing_user_prompt
 
 KST = timezone(timedelta(hours=9))
-SCAN_INTERVAL_SEC = 30 * 60      # 30분마다 수집
+# 아래 상한들은 Gemini 무료 티어 기준으로 잡혀 있다.
+# 사이클당 최대 호출 = 공식×1 + 공식×2(후속) + 루머×2(검증) = 2 + 4 + 2 = 8회
+# 하루 최대 = 8 × 24사이클 = 192회 — 여기에 config.GEMINI_DAILY_BUDGET이 최종 상한을 건다.
+SCAN_INTERVAL_SEC = 60 * 60      # 60분마다 수집
 BRIEFING_HOURS_KST = (9, 21)     # 09:00, 21:00 KST
 BRIEFING_MAX_ITEMS = 10
 IMMEDIATE_ALERT_MIN_LEVEL = 4      # Level 4 이상 즉시 알림 (공식)
-IMMEDIATE_MAX_PER_CYCLE   = 3      # 사이클당 공식 즉시 알림 최대 건수
+IMMEDIATE_MAX_PER_CYCLE   = 2      # 사이클당 공식 즉시 알림 최대 건수
 RUMOR_IMMEDIATE_MIN_LEVEL = 3      # Level 3 이상 즉시 알림 (루머/커뮤니티)
-RUMOR_IMMEDIATE_MAX_PER_CYCLE = 2  # 사이클당 루머 즉시 포스팅 최대 건수
+RUMOR_IMMEDIATE_MAX_PER_CYCLE = 1  # 사이클당 루머 즉시 포스팅 최대 건수
 COMMUNITY_REACTION_DELAY_MIN = 45  # 공식 속보 후 커뮤 반응 후속 지연 (분)
 
 
@@ -127,7 +130,7 @@ class AIFieldScheduler:
         label = f"L{item.alert_level} {'공식' if item.is_official else '루머'}"
         print(f"[scheduler] 즉시 알림 [{label}] {item.title[:50]}")
         try:
-            # 루머는 발송 전에 검증 서칭 — 결과를 본문에 함께 담아야 하므로 먼저 돈다
+            # 루머는 발송 전에 검증 서칭 — 결과를 본문에 함께 담아야 하므로 먼저 돌다
             if not item.is_official:
                 try:
                     item.verification_context = await asyncio.wait_for(
@@ -251,6 +254,7 @@ class AIFieldScheduler:
             "next_briefing": next_at.strftime("%m/%d %H:%M KST"),
             "next_briefing_in": f"{wait_h:.1f}h",
             "buffer_count": len(self._briefing_buffer),
+            "budget": budget_status(),
         }
 
 
